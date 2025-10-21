@@ -110,15 +110,17 @@ public:
     virtual void setRowCount(int rowCount) = 0;
     virtual void setUpdatesEnabled(bool isEnabled) = 0;
     virtual void setSortingEnabled(bool isEnabled) = 0;
-    virtual void createItem(QString text, Qt::AlignmentFlag) = 0;
+    virtual QTableWidgetItem * createItem(QString text, Qt::AlignmentFlag) = 0;
     virtual void insertRow(int rowIndex) = 0;
+    virtual bool isColumnHidden(ProgramTableColumn column) = 0;
     virtual bool isColumnHidden(int columnIndex) = 0;
     virtual void setItem(int row, ProgramTableColumn column, QString text) = 0;
     virtual void showColumn(ProgramTableColumn column) = 0;
     virtual void hideColumn(ProgramTableColumn column) = 0;
+    virtual void setColumnWidth(ProgramTableColumn column, int width) = 0;
 protected:
     QList<Qt::AlignmentFlag> columnAlignments;
-    virtual void setColumnAlignment(int columnIndex, Qt::AlignmentFlag alignment) = 0;
+    virtual void setColumnAlignment(ProgramTableColumn column, Qt::AlignmentFlag alignment) = 0;
     virtual void init() = 0;
 };
 
