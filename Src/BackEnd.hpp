@@ -36,11 +36,12 @@ enum class UniversityType {
 };
 
 enum class TrackType {
+    Undefined,
     Science,    //Sayısal
     Humanities, //Sözel
     EqualWeight,//Eşit Ağırlık
     Language,   //Dil
-    TYT         //TYT
+    TYT,         //TYT
 };
 
 enum class Country {
@@ -51,29 +52,30 @@ enum class Country {
 };
 
 enum class DegreeType {
+    All,
     Bachelor, //Lisans
     Associate //Ön lisans
 };
 
 struct Interval {
-    std::optional<double> minimum;
-    std::optional<double> maximum;
+    std::optional<double> minimum = 100;
+    std::optional<double> maximum = 560;
 };
 
 struct SelectedQuotaTypes {
-    bool regularQuota;
-    bool highSchoolValedictoriansQuota;
-    bool women34PlusQuota;
-    bool earthquakeVictimsQuota;
-    bool martyrsAndVeteransQuota;
-    bool trncNationalsQuota;
-    bool mtokQuota;
+    bool regularQuota = true;
+    bool martyrsAndVeteransQuota = false;
+    bool earthquakeVictimsQuota = false;
+    bool highSchoolValedictoriansQuota = false;
+    bool women34PlusQuota = false;
+    bool trncNationalsQuota = false;
+    bool mtokQuota = false;
 };
 
 struct SelectedTuitionFeeTypes {
-    bool Free;
-    bool Discounted;
-    bool Paid;
+    bool free = true;
+    bool discounted = true;
+    bool paid = true;
 };
 
 enum class PlacementType {
@@ -88,14 +90,14 @@ struct OrderParameters {
 };
 
 struct AcademyScopeParameters {
-    PlacementType placementType;
-    QString universityName;
-    QString departmentName;
-    UniversityType universityType;
-    TrackType trackType;
+    PlacementType placementType = PlacementType::Regular;
+    QString universityName = "";
+    QString departmentName = "";
+    UniversityType universityType = UniversityType::Undefined;
+    TrackType trackType = TrackType::Undefined;
     Interval scoreInterval;
     Country country;
-    DegreeType degreeType;
+    DegreeType degreeType = DegreeType::All;
     SelectedQuotaTypes selectedQuotaTypes;
     SelectedTuitionFeeTypes selectedTuitionFeeTypes;
     OrderParameters order;
@@ -155,5 +157,4 @@ private:
     QHeaderView * programTableHorizontalHeader = nullptr;
     QStringList yksTableColumnNames;
     QSqlDatabase db;
-    TercihTuru tercihTuru = TercihTuru::NormalTercih;
 };

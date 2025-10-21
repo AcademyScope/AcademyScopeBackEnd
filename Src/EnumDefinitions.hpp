@@ -10,11 +10,6 @@ You should have received a copy of the GNU General Public License along with thi
 */
 #pragma once
 
-enum class TercihTuru : int {
-    NormalTercih = 0,
-    EkTercih = 1
-};
-
 enum class ProgramTableColumn : int {
     ProgramKodu = 0,
     Universite,

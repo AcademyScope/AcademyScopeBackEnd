@@ -128,9 +128,9 @@ void AcademyScopeBackEnd::populateProgramTable(const AcademyScopeParameters &aca
     QString gradeIntervalSubQuery = "";
 
     QString sqlQuery = "Select * FROM ";
-    if(tercihTuru == TercihTuru::NormalTercih)
+    if(academyScopeParameters.placementType == PlacementType::Regular)
         sqlQuery += "YKS";
-    else if(tercihTuru == TercihTuru::EkTercih)
+    else if(academyScopeParameters.placementType == PlacementType::Additional)
         sqlQuery += "EkTercihDetayli";
 
     if(universityName.trimmed() != "") {
@@ -204,7 +204,7 @@ void AcademyScopeBackEnd::populateProgramTable(const AcademyScopeParameters &aca
         if(enBuyukPuan < 560) {
             if(!genelPuanAraligiQuery.isEmpty())
                 genelPuanAraligiQuery += " AND ";
-            genelPuanAraligiQuery += "GenelEnKucukPuan < " + QString::number(enBuyukPuan);
+            genelPuanAraligiQuery += "GenelEnBuyukPuan < " + QString::number(enBuyukPuan);
         }
         if(!genelPuanAraligiQuery.isEmpty())
             gradeIntervalQueries.append(genelPuanAraligiQuery);
@@ -298,15 +298,15 @@ void AcademyScopeBackEnd::populateProgramTable(const AcademyScopeParameters &aca
         kontenjanQueries.append("Kadin34Kontenjan IS NOT NULL");
     }
 
-    if (academyScopeParameters.selectedTuitionFeeTypes.Free) {
+    if (academyScopeParameters.selectedTuitionFeeTypes.free) {
         tuitionQueries.append("UcretDurumu = 0");
     }
 
-    if (academyScopeParameters.selectedTuitionFeeTypes.Discounted) {
+    if (academyScopeParameters.selectedTuitionFeeTypes.discounted) {
         tuitionQueries.append("UcretDurumu = 50");
     }
 
-    if (academyScopeParameters.selectedTuitionFeeTypes.Paid) {
+    if (academyScopeParameters.selectedTuitionFeeTypes.paid) {
         tuitionQueries.append("UcretDurumu = 100");
     }
 
@@ -400,7 +400,7 @@ void AcademyScopeBackEnd::populateProgramTable(const AcademyScopeParameters &aca
             QString kadin34EnKucukPuan = query.value("Kadin34EnKucukPuan").toString();
 
             //Ek kontenjanda yok
-            if(tercihTuru == TercihTuru::NormalTercih) {
+            if(academyScopeParameters.placementType == PlacementType::Regular) {
                 //Ek kontenjanda yok
                 QString okulBirincisiKontenjan = query.value("OkulBirincisiKontenjan").toString();
                 QString okulBirincisiEnKucukPuan = query.value("OkulBirincisiEnKucukPuan").toString();
@@ -510,7 +510,7 @@ void AcademyScopeBackEnd::hideUnnecessaryColumnsOnTheProgramTable(const AcademyS
     }
 
     //Ek kontenjanda yok
-    if(tercihTuru == TercihTuru::NormalTercih) {
+    if(academyScopeParameters.placementType == PlacementType::Regular) {
         if(academyScopeParameters.selectedQuotaTypes.regularQuota)
             programTable->showColumn(ProgramTableColumn::GenelYerlesen);
         if(academyScopeParameters.selectedQuotaTypes.highSchoolValedictoriansQuota)
