@@ -53,16 +53,6 @@ QList<University> AcademyScopeBackEnd::getUniversities() {
     return universities;
 }
 
-void AcademyScopeBackEnd::setSortBy(int columnIndex) {
-    if (lastSortCol == columnIndex)
-        lastSortOrder = (lastSortOrder == Qt::AscendingOrder) ? Qt::DescendingOrder                                                    : Qt::AscendingOrder;
-    else {
-        lastSortCol = columnIndex;
-        lastSortOrder = Qt::AscendingOrder;
-    }
-    programTableHorizontalHeader->setSortIndicator(lastSortCol, lastSortOrder);
-}
-
 void AcademyScopeBackEnd::initDB() {
     db = QSqlDatabase::addDatabase("QSQLITE");
 
@@ -364,15 +354,15 @@ void AcademyScopeBackEnd::populateProgramTable(const AcademyScopeParameters &aca
         }
     }
 
-    if(lastSortCol == -1) {
+    if(academyScopeParameters.order.toBeOrdered == false) {
         const QString key = SQLiteUtil::trOrderExprFor("ProgramKodu");
         sqlQuery += " ORDER BY ProgramKodu ASC";
     }
-    else if(!programTable->isColumnHidden(lastSortCol)) {
-        QString col = getDbColumnNameFromProgramTableColumnIndex(lastSortCol);
+    else if(!programTable->isColumnHidden(academyScopeParameters.order.column)) {
+        QString col = getDbColumnNameFromProgramTableColumnIndex(academyScopeParameters.order.column);
         const QString key = SQLiteUtil::trOrderExprFor(col);
         sqlQuery += " ORDER BY " + key;
-        if(lastSortOrder == Qt::AscendingOrder)
+        if(academyScopeParameters.order.direction == Qt::AscendingOrder)
             sqlQuery += " ASC";
         else
             sqlQuery += " DESC";
@@ -574,8 +564,8 @@ void AcademyScopeBackEnd::initializeYKSTableColumnNames()
     };
 }
 
-QString AcademyScopeBackEnd::getDbColumnNameFromProgramTableColumnIndex(int columnIndex) {
-    switch (static_cast<ProgramTableColumn>(columnIndex)) {
+QString AcademyScopeBackEnd::getDbColumnNameFromProgramTableColumnIndex(ProgramTableColumn column) {
+    switch (column) {
     case ProgramTableColumn::ProgramKodu:              return "ProgramKodu";
     case ProgramTableColumn::Universite:               return "UniversiteAdi";
     case ProgramTableColumn::Kampus:                   return "FakulteYuksekokulAdi";

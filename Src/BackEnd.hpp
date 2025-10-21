@@ -81,6 +81,12 @@ enum class PlacementType {
     Additional     // Ek yerleştirme
 };
 
+struct OrderParameters {
+    ProgramTableColumn column;
+    Qt::SortOrder direction = Qt::SortOrder::AscendingOrder;
+    bool toBeOrdered = false;
+};
+
 struct AcademyScopeParameters {
     PlacementType placementType;
     QString universityName;
@@ -92,6 +98,7 @@ struct AcademyScopeParameters {
     DegreeType degreeType;
     SelectedQuotaTypes selectedQuotaTypes;
     SelectedTuitionFeeTypes selectedTuitionFeeTypes;
+    OrderParameters order;
     Interval regularQuotaInterval,
           highSchoolValedictoriansQuotaInterval,
           women34PlusQuotaInterval,
@@ -140,14 +147,11 @@ private:
     void hideUnusedColumnsOnTheProgramTable();
     void initializeYKSTableColumnNames();
     void setLogoDarkMode(bool isDarkMode);
-    void setSortBy(int columnIndex);
-    QString getDbColumnNameFromProgramTableColumnIndex(int columnIndex);
+    QString getDbColumnNameFromProgramTableColumnIndex(ProgramTableColumn columnIndex);
 
     ProgramTableInterface * programTable = nullptr;
 
     QLocale turkishLocale;
-    int lastSortCol = -1;
-    Qt::SortOrder lastSortOrder = Qt::AscendingOrder;
     QHeaderView * programTableHorizontalHeader = nullptr;
     QStringList yksTableColumnNames;
     QSqlDatabase db;
