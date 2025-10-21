@@ -184,8 +184,17 @@ void AcademyScopeBackEnd::populateProgramTable(const AcademyScopeParameters &aca
         break;
     }
 
-    double enKucukPuan = academyScopeParameters.scoreInterval.minimum.value();
-    double enBuyukPuan = academyScopeParameters.scoreInterval.minimum.value();
+    double enKucukPuan, enBuyukPuan;
+
+    if(academyScopeParameters.scoreInterval.minimum.has_value())
+        enKucukPuan = academyScopeParameters.scoreInterval.minimum.value();
+    else
+        enKucukPuan = 0;
+
+    if(academyScopeParameters.scoreInterval.maximum.has_value())
+        enBuyukPuan = academyScopeParameters.scoreInterval.maximum.value();
+    else
+        enBuyukPuan = 0;
 
     QString genelPuanAraligiQuery = "";
     if(academyScopeParameters.selectedQuotaTypes.regularQuota || academyScopeParameters.selectedQuotaTypes.trncNationalsQuota || academyScopeParameters.selectedQuotaTypes.mtokQuota) {
