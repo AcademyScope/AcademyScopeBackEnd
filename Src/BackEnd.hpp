@@ -10,12 +10,9 @@ You should have received a copy of the GNU General Public License along with thi
 */
 #pragma once
 
-#include <QMainWindow>
 #include <QLocale>
 #include <QSqlDatabase>
 #include "EnumDefinitions.hpp"
-#include <QHeaderView>
-#include <QTableWidgetItem>
 #include <QStandardItemModel>
 #include <optional>
 
@@ -119,7 +116,6 @@ public:
     virtual void setRowCount(int rowCount) = 0;
     virtual void setUpdatesEnabled(bool isEnabled) = 0;
     virtual void setSortingEnabled(bool isEnabled) = 0;
-    virtual QTableWidgetItem * createItem(QString text, Qt::AlignmentFlag) = 0;
     virtual void insertRow(int rowIndex) = 0;
     virtual bool isColumnHidden(ProgramTableColumn column) = 0;
     virtual bool isColumnHidden(int columnIndex) = 0;
@@ -154,7 +150,6 @@ private:
     ProgramTableInterface * programTable = nullptr;
 
     QLocale turkishLocale;
-    QHeaderView * programTableHorizontalHeader = nullptr;
     QStringList yksTableColumnNames;
     QSqlDatabase db;
 };
