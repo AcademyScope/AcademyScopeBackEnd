@@ -132,20 +132,20 @@ protected:
 class AcademyScopeBackEnd {
 public:
     AcademyScopeBackEnd(ProgramTableInterface * programTable);
-    QList<University> getUniversities();
-    QList<QString> getDepartments();
-    void populateProgramTable(const AcademyScopeParameters &academyScopeParameters);
+    QList<University> getUniversities() const;
+    QList<QString> getDepartments() const;
+    void populateProgramTable(const AcademyScopeParameters &academyScopeParameters) const;
 
 private:
     void initDB();
     void setProgramTableColumnWidths();
     void populateUniversitiesComboBox();
     void populateDepartmentsComboBox();
-    void hideUnnecessaryColumnsOnTheProgramTable(const AcademyScopeParameters &academyScopeParameters);
+    void hideUnnecessaryColumnsOnTheProgramTable(const AcademyScopeParameters &academyScopeParameters) const;
     void hideUnusedColumnsOnTheProgramTable();
     void initializeYKSTableColumnNames();
     void setLogoDarkMode(bool isDarkMode);
-    QString getDbColumnNameFromProgramTableColumnIndex(ProgramTableColumn columnIndex);
+    QString getDbColumnNameFromProgramTableColumnIndex(ProgramTableColumn columnIndex) const;
 
     ProgramTableInterface * programTable = nullptr;
 

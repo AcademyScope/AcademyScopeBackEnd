@@ -28,7 +28,7 @@ AcademyScopeBackEnd::AcademyScopeBackEnd(ProgramTableInterface * programTable) {
     initDB();
 }
 
-QList<University> AcademyScopeBackEnd::getUniversities() {
+QList<University> AcademyScopeBackEnd::getUniversities() const {
     QSqlQuery query;
     QList<University> universities;
 
@@ -64,7 +64,7 @@ void AcademyScopeBackEnd::initDB() {
     }
 }
 
-QList<QString> AcademyScopeBackEnd::getDepartments() {
+QList<QString> AcademyScopeBackEnd::getDepartments() const {
     /*
     QStandardItem* firstItem = model->item(0);
     firstItem->setFlags(firstItem->flags() & ~Qt::ItemIsEnabled);
@@ -100,7 +100,7 @@ QList<QString> AcademyScopeBackEnd::getDepartments() {
     return departments;
 }
 
-void AcademyScopeBackEnd::populateProgramTable(const AcademyScopeParameters &academyScopeParameters) {
+void AcademyScopeBackEnd::populateProgramTable(const AcademyScopeParameters &academyScopeParameters) const {
     programTable->clearContents();
     programTable->setRowCount(0);
 
@@ -179,6 +179,8 @@ void AcademyScopeBackEnd::populateProgramTable(const AcademyScopeParameters &aca
         break;
     case TrackType::Language:
         whereQueries.append("PuanTuru = \"DİL\"");
+        break;
+    case TrackType::Undefined:
         break;
     }
 
@@ -449,7 +451,7 @@ void AcademyScopeBackEnd::populateProgramTable(const AcademyScopeParameters &aca
     return;
 }
 
-void AcademyScopeBackEnd::hideUnnecessaryColumnsOnTheProgramTable(const AcademyScopeParameters &academyScopeParameters) {
+void AcademyScopeBackEnd::hideUnnecessaryColumnsOnTheProgramTable(const AcademyScopeParameters &academyScopeParameters) const {
     if(academyScopeParameters.selectedQuotaTypes.regularQuota || academyScopeParameters.selectedQuotaTypes.trncNationalsQuota || academyScopeParameters.selectedQuotaTypes.mtokQuota) {
         programTable->showColumn(ProgramTableColumn::GenelKontenjan);
         programTable->showColumn(ProgramTableColumn::GenelYerlesen);
@@ -571,7 +573,7 @@ void AcademyScopeBackEnd::initializeYKSTableColumnNames()
     };
 }
 
-QString AcademyScopeBackEnd::getDbColumnNameFromProgramTableColumnIndex(ProgramTableColumn column) {
+QString AcademyScopeBackEnd::getDbColumnNameFromProgramTableColumnIndex(ProgramTableColumn column) const {
     switch (column) {
     case ProgramTableColumn::ProgramKodu:              return "ProgramKodu";
     case ProgramTableColumn::Universite:               return "UniversiteAdi";
