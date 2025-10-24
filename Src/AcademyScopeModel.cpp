@@ -126,13 +126,13 @@ QVariant AcademyScopeModel::headerData(int section,
     return {};
 }
 
-void AcademyScopeModel::showColumn(ProgramTableColumn column)
+void AcademyScopeModel::showColumn(ProgramTableColumn column) const
 {
     qDebug()<<"Show column" << (int)column;
     emit columnVisibilityChanged(int(column), true);
 }
 
-void AcademyScopeModel::hideColumn(ProgramTableColumn column)
+void AcademyScopeModel::hideColumn(ProgramTableColumn column) const
 {
     qDebug()<<"Hide column" << (int)column;
     emit columnVisibilityChanged(int(column), false);

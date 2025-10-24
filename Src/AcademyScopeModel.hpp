@@ -26,7 +26,7 @@ struct LazyLoadingInfo {
 class AcademyScopeModel : public QAbstractTableModel {
     Q_OBJECT
 signals:
-    void columnVisibilityChanged(int index, bool visible);
+    void columnVisibilityChanged(int index, bool visible) const;
 public:
     explicit AcademyScopeModel(QObject *parent = nullptr);
 
@@ -38,8 +38,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
-    void showColumn(ProgramTableColumn column);
-    void hideColumn(ProgramTableColumn column);
+    void showColumn(ProgramTableColumn column) const;
+    void hideColumn(ProgramTableColumn column) const;
 
     bool canFetchMore(const QModelIndex &parent) const override;
     void fetchMore(const QModelIndex &parent) override;

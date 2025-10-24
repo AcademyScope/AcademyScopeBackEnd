@@ -133,8 +133,8 @@ protected:
 class AcademyScopeBackEnd {
 public:
     AcademyScopeBackEnd();
-    QList<University> getUniversities();
-    QList<QString> getDepartments();
+    QList<University> getUniversities()const;
+    QList<QString> getDepartments() const;
     void populateProgramTable(const AcademyScopeParameters &academyScopeParameters);
     AcademyScopeModel * getDataModel();
 
