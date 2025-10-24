@@ -21,8 +21,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 QString SQLiteUtil::resolveDatabasePath() {
 #ifdef QT_DEBUG
-    // Dev-friendly: load DB from the same directory as this .cpp file
-    return QFileInfo(__FILE__).absolutePath() + "/Databases/YKS.sqlite";
+    return QString(PROJECT_PATH) + "/Databases/YKS.sqlite";
 #else
     #if defined(Q_OS_MAC)
         // macOS: inside app bundle Resources/Databases
