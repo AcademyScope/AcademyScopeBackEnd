@@ -236,7 +236,7 @@ void AcademyScopeBackEnd::initializeYKSTableColumnNames()
 QString AcademyScopeBackEnd::buildFilteredSql(const AcademyScopeParameters &p)
 {
     QStringList where;
-    QString sql = "SELECT * FROM ";
+    QString sql = "FROM ";
 
     // Base table
     sql += (p.placementType == PlacementType::Additional)

@@ -50,7 +50,8 @@ private:
     void fetchMoreData();
 
     QSqlDatabase db;
-    QString baseQuery;     // Filtrelenmiş WHERE + ORDER BY
+    QString baseQuery;
+    QString countQuery;
     QVector<QVector<QVariant>> modelData;
     LazyLoadingInfo lazyLoadingInfo;
 };

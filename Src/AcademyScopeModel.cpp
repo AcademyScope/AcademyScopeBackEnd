@@ -35,11 +35,11 @@ void AcademyScopeModel::setBaseQuery(const QString &queryBase)
     beginResetModel();
 
     modelData.clear();
-    baseQuery = queryBase;
+    baseQuery = "SELECT * " + queryBase;
     lazyLoadingInfo = LazyLoadingInfo();
 
     // Get total row count
-    QString countQuery = QString("SELECT COUNT(*) FROM (%1)").arg(baseQuery);
+    countQuery = "SELECT COUNT(*) " + queryBase;
     QSqlQuery count(db);
     if (count.exec(countQuery) && count.next())
         lazyLoadingInfo.totalRowCount = count.value(0).toInt();
@@ -63,6 +63,17 @@ void AcademyScopeModel::setBaseQuery(const QString &queryBase)
 int AcademyScopeModel::rowCount(const QModelIndex &) const
 {
     return modelData.size();
+    QSqlQuery query(countQuery);
+    if (!query.exec()) {
+        qWarning() << "[AcademyScopeModel] Query failed:" << query.lastError().text();
+        return 0;
+    }
+
+    if(query.next()) {
+        QVariant value = query.value(0);
+        return value.toInt();
+    }
+    return 0;
 }
 
 int AcademyScopeModel::columnCount(const QModelIndex &) const
