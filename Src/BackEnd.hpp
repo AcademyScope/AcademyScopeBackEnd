@@ -55,7 +55,6 @@ private:
     QString buildFilteredSql(const AcademyScopeParameters &academyScopeParameters);
     QString getDbColumnNameFromProgramTableColumnIndex(ProgramTableColumn columnIndex);
     AcademyScopeModel dataModel;
-    DataWindow window;
 
     QLocale turkishLocale;
     QStringList yksTableColumnNames;

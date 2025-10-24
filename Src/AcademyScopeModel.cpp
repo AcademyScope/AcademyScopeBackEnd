@@ -2,12 +2,17 @@
 AcademyScopeBackEnd class definitions of AcademyScope
 Copyright (C) 2025 Volkan Orhan
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your option)
+any later version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 */
+
 #include "AcademyScopeModel.hpp"
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -36,19 +41,19 @@ void AcademyScopeModel::setBaseQuery(const QString &queryBase)
 
     modelData.clear();
     baseQuery = "SELECT * " + queryBase;
-    dataWindow = DataWindow();
+    dataWindow = DataWindow(); // reset window state
 
-    // Get total row count
+    // --- Get total row count ---
     countQuery = "SELECT COUNT(*) " + queryBase;
     QSqlQuery count(db);
     if (count.exec(countQuery) && count.next())
         dataWindow.tableRowCount = count.value(0).toInt();
     else {
-        qWarning() << "COUNT query failed:" << count.lastError().text();
+        qWarning() << "[AcademyScopeModel] COUNT query failed:" << count.lastError().text();
         dataWindow.tableRowCount = 0;
     }
 
-    // Detect column count
+    // --- Detect column count ---
     QString firstRowQuery = QString("%1 LIMIT 1").arg(baseQuery);
     QSqlQuery colQuery(db);
     if (colQuery.exec(firstRowQuery))
@@ -56,40 +61,39 @@ void AcademyScopeModel::setBaseQuery(const QString &queryBase)
     else
         dataWindow.columnCount = 0;
 
+    // --- Allocate placeholder slots ---
+    modelData.resize(dataWindow.tableRowCount);
 
     endResetModel();
-    fetchMoreData();
+
+    // Load initial viewport
+    dataWindow.beginningIndex = 0;
+    dataWindow.endingIndex = std::min(dataWindow.windowSize - 1, dataWindow.tableRowCount - 1);
+    loadCurrentWindow();
 }
 
 int AcademyScopeModel::rowCount(const QModelIndex &) const
 {
-    return modelData.size();
-    QSqlQuery query(countQuery);
-    if (!query.exec()) {
-        qWarning() << "[AcademyScopeModel] Query failed:" << query.lastError().text();
-        return 0;
-    }
-
-    if(query.next()) {
-        QVariant value = query.value(0);
-        return value.toInt();
-    }
-    return 0;
+    return dataWindow.tableRowCount;
 }
-
 
 int AcademyScopeModel::columnCount(const QModelIndex &) const
 {
     return dataWindow.columnCount;
 }
 
-
 QVariant AcademyScopeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole)
         return {};
 
-    const auto &row = modelData[index.row()];
+    const int r = index.row();
+    if (r < 0 || r >= modelData.size())
+        return {};
+
+    const auto &row = modelData[r];
+    if (row.isEmpty()) return {}; // not loaded yet
+
     if (index.column() >= row.size())
         return {};
 
@@ -142,61 +146,89 @@ QVariant AcademyScopeModel::headerData(int section,
 
 void AcademyScopeModel::showColumn(ProgramTableColumn column) const
 {
-    qDebug()<<"Show column" << (int)column;
     emit columnVisibilityChanged(int(column), true);
 }
 
 void AcademyScopeModel::hideColumn(ProgramTableColumn column) const
 {
-    qDebug()<<"Hide column" << (int)column;
     emit columnVisibilityChanged(int(column), false);
 }
 
-bool AcademyScopeModel::canFetchMore(const QModelIndex &) const
+bool AcademyScopeModel::canFetchMore(const QModelIndex &parent) const
 {
-    return modelData.size() < dataWindow.tableRowCount;
+
 }
 
-void AcademyScopeModel::fetchMore(const QModelIndex &)
+void AcademyScopeModel::fetchMore(const QModelIndex &parent)
 {
-    fetchMoreData();
+
 }
 
 void AcademyScopeModel::fetchMoreData()
 {
+
+}
+
+DataWindow *AcademyScopeModel::getDataWindow()
+{
+    return &dataWindow;
+}
+
+/*--------------------------------------
+ * LazyLoad++ core functions
+ *-------------------------------------*/
+
+void AcademyScopeModel::loadCurrentWindow()
+{
+    loadRows(dataWindow.beginningIndex, dataWindow.endingIndex);
+}
+
+void AcademyScopeModel::loadRows(int startRow, int endRow)
+{
     if (!db.isOpen() || baseQuery.isEmpty())
         return;
 
-    const int startRow = modelData.size();
+    startRow = std::max(0, startRow);
+    endRow   = std::min(dataWindow.tableRowCount - 1, endRow);
 
-    QString limitedQuery = QString("%1 LIMIT %2 OFFSET %3")
-                               .arg(baseQuery)
-                               .arg(dataWindow.windowSize)
-                               .arg(dataWindow.beginningIndex);
+    const int fetchCount = endRow - startRow + 1;
+    QString queryStr = QString("%1 LIMIT %2 OFFSET %3")
+                           .arg(baseQuery)
+                           .arg(fetchCount)
+                           .arg(startRow);
 
     QSqlQuery query(db);
-    if (!query.exec(limitedQuery)) {
+    if (!query.exec(queryStr)) {
         qWarning() << "[AcademyScopeModel] Query failed:" << query.lastError().text();
         return;
     }
 
-    beginInsertRows(QModelIndex(), startRow, startRow + dataWindow.windowSize - 1);
+    beginResetModel();
 
-    while (query.next()) {
+    if (modelData.isEmpty())
+        modelData.resize(dataWindow.tableRowCount);
+
+    int rowIndex = startRow;
+    while (query.next() && rowIndex <= endRow) {
         QVector<QVariant> row;
         row.reserve(dataWindow.columnCount);
-        for (int i = 0; i < dataWindow.columnCount; ++i) {
-            QVariant value = query.value(i);
-            if (value.isNull())
-                value = QVariant("—");
-            row.append(value);
-        }
-        modelData.append(row);
+        for (int i = 0; i < dataWindow.columnCount; ++i)
+            row.append(query.value(i).isNull() ? QVariant("—") : query.value(i));
+        modelData[rowIndex] = row;
+        ++rowIndex;
     }
 
-    endInsertRows();
-    dataWindow.beginningIndex += dataWindow.windowSize;
+    // Geri kalan satırları boşalt
+    for (int i = 0; i < startRow; ++i)
+        modelData[i].clear();
+    for (int i = endRow + 1; i < modelData.size(); ++i)
+        modelData[i].clear();
+
+    endResetModel();
+
+    qDebug() << "[AcademyScopeModel] Loaded rows:" << startRow << "-" << endRow;
 }
+
 
 void AcademyScopeModel::clear()
 {
@@ -206,4 +238,3 @@ void AcademyScopeModel::clear()
     baseQuery.clear();
     endResetModel();
 }
-

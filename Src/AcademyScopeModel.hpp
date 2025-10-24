@@ -30,17 +30,23 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
+    void setWindowRange(int offset, int limit);
+    void reloadWindow();
+
     void showColumn(ProgramTableColumn column) const;
     void hideColumn(ProgramTableColumn column) const;
 
     bool canFetchMore(const QModelIndex &parent) const override;
     void fetchMore(const QModelIndex &parent) override;
+    Q_INVOKABLE void fetchMoreData();
 
+    DataWindow * getDataWindow();
     void clear();
 
     int columnCount(const QModelIndex &) const override;
+    void loadCurrentWindow();
+    void loadRows(int startRow, int endRow);
 private:
-    void fetchMoreData();
 
     QSqlDatabase db;
     QString baseQuery;
