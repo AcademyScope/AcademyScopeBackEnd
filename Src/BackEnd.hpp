@@ -12,104 +12,9 @@ You should have received a copy of the GNU General Public License along with thi
 
 #include <QLocale>
 #include <QSqlDatabase>
-#include "EnumDefinitions.hpp"
+#include "DataTypeDefinitions.hpp"
 #include <QStandardItemModel>
-#include <optional>
 #include "AcademyScopeModel.hpp"
-
-struct University {
-    int id;
-    QString name;
-};
-
-struct Department {
-    int id;
-    QString name;
-};
-
-enum class UniversityType {
-    Undefined = -1,
-    Government = 0,
-    Private = 1,
-};
-
-enum class TrackType {
-    Undefined,
-    Science,    //Sayısal
-    Humanities, //Sözel
-    EqualWeight,//Eşit Ağırlık
-    Language,   //Dil
-    TYT,         //TYT
-};
-
-enum class Country {
-    AllCountries,
-    Turkiye,
-    Cyprus,
-    ForeignCountries
-};
-
-enum class DegreeType {
-    All,
-    Bachelor, //Lisans
-    Associate //Ön lisans
-};
-
-struct Interval {
-    std::optional<double> minimum = 100;
-    std::optional<double> maximum = 560;
-};
-
-struct SelectedQuotaTypes {
-    bool regularQuota = true;
-    bool martyrsAndVeteransQuota = false;
-    bool earthquakeVictimsQuota = false;
-    bool highSchoolValedictoriansQuota = false;
-    bool women34PlusQuota = false;
-    bool trncNationalsQuota = false;
-    bool mtokQuota = false;
-};
-
-struct SelectedTuitionFeeTypes {
-    bool free = true;
-    bool discounted = true;
-    bool paid = true;
-};
-
-enum class PlacementType {
-    Regular,       // Normal yerleştirme
-    Additional     // Ek yerleştirme
-};
-
-struct OrderParameters {
-    ProgramTableColumn column;
-    Qt::SortOrder direction = Qt::SortOrder::AscendingOrder;
-    bool toBeOrdered = false;
-};
-
-struct AcademyScopeParameters {
-    PlacementType placementType = PlacementType::Regular;
-    QString universityName = "";
-    QString departmentName = "";
-    UniversityType universityType = UniversityType::Undefined;
-    TrackType trackType = TrackType::Undefined;
-    Interval scoreInterval;
-    Country country;
-    DegreeType degreeType = DegreeType::All;
-    SelectedQuotaTypes selectedQuotaTypes;
-    SelectedTuitionFeeTypes selectedTuitionFeeTypes;
-    OrderParameters order;
-    Interval regularQuotaInterval,
-          highSchoolValedictoriansQuotaInterval,
-          women34PlusQuotaInterval,
-          earthquakeVictimsQuotaInterval,
-          martyrsAndVeteransQuotaInterval,
-          trncNationalsQuotaInterval;
-};
-
-struct Program {
-
-};
 
 class ProgramTableInterface {
 public:
@@ -150,6 +55,7 @@ private:
     QString buildFilteredSql(const AcademyScopeParameters &academyScopeParameters);
     QString getDbColumnNameFromProgramTableColumnIndex(ProgramTableColumn columnIndex);
     AcademyScopeModel dataModel;
+    DataWindow window;
 
     QLocale turkishLocale;
     QStringList yksTableColumnNames;

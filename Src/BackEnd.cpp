@@ -233,27 +233,27 @@ void AcademyScopeBackEnd::initializeYKSTableColumnNames()
     };
 }
 
-QString AcademyScopeBackEnd::buildFilteredSql(const AcademyScopeParameters &p)
+QString AcademyScopeBackEnd::buildFilteredSql(const AcademyScopeParameters &parameters)
 {
     QStringList where;
     QString sql = "FROM ";
 
     // Base table
-    sql += (p.placementType == PlacementType::Additional)
+    sql += (parameters.placementType == PlacementType::Additional)
                ? "EkTercihDetayli" : "YKS";
 
     // University name
-    if (!p.universityName.trimmed().isEmpty())
+    if (!parameters.universityName.trimmed().isEmpty())
         where << QString("UniversiteAdi LIKE '%%1%'")
-                     .arg(StringUtil::toTurkishUpperCase(p.universityName));
+                     .arg(StringUtil::toTurkishUpperCase(parameters.universityName));
 
     // Department
-    if (!p.departmentName.trimmed().isEmpty())
+    if (!parameters.departmentName.trimmed().isEmpty())
         where << QString("ProgramAdi LIKE '%%1%'")
-                     .arg(StringUtil::toTurkishTitleCase(p.departmentName));
+                     .arg(StringUtil::toTurkishTitleCase(parameters.departmentName));
 
     // Country filter
-    switch (p.country) {
+    switch (parameters.country) {
     case Country::Turkiye:          where << "UlkeKodu = 90"; break;
     case Country::Cyprus:           where << "UlkeKodu = 357"; break;
     case Country::ForeignCountries: where << "UlkeKodu NOT IN (90, 357)"; break;
@@ -262,15 +262,15 @@ QString AcademyScopeBackEnd::buildFilteredSql(const AcademyScopeParameters &p)
     }
 
     // Degree type
-    if (p.degreeType == DegreeType::Bachelor)      where << "Lisans = 1";
-    else if (p.degreeType == DegreeType::Associate) where << "Lisans = 0";
+    if (parameters.degreeType == DegreeType::Bachelor)      where << "Lisans = 1";
+    else if (parameters.degreeType == DegreeType::Associate) where << "Lisans = 0";
 
     // University type
-    if (p.universityType == UniversityType::Government)      where << "DevletUniversitesi = 1";
-    else if (p.universityType == UniversityType::Private)    where << "DevletUniversitesi = 0";
+    if (parameters.universityType == UniversityType::Government)      where << "DevletUniversitesi = 1";
+    else if (parameters.universityType == UniversityType::Private)    where << "DevletUniversitesi = 0";
 
     // Track type
-    switch (p.trackType) {
+    switch (parameters.trackType) {
     case TrackType::Science:      where << "PuanTuru = 'SAY'"; break;
     case TrackType::EqualWeight:  where << "PuanTuru = 'EA'";  break;
     case TrackType::Humanities:   where << "PuanTuru = 'SÖZ'"; break;
@@ -280,8 +280,8 @@ QString AcademyScopeBackEnd::buildFilteredSql(const AcademyScopeParameters &p)
     }
 
     // Score range
-    double minScore = p.scoreInterval.minimum.value_or(0);
-    double maxScore = p.scoreInterval.maximum.value_or(0);
+    double minScore = parameters.scoreInterval.minimum.value_or(0);
+    double maxScore = parameters.scoreInterval.maximum.value_or(0);
     QString scoreRange;
 
     if (minScore > 100)
@@ -295,14 +295,14 @@ QString AcademyScopeBackEnd::buildFilteredSql(const AcademyScopeParameters &p)
 
     // Quota types
     QStringList kontenjan;
-    if (p.selectedQuotaTypes.regularQuota)           kontenjan << "GenelKontenjan IS NOT NULL";
-    if (p.selectedQuotaTypes.highSchoolValedictoriansQuota) kontenjan << "OkulBirincisiKontenjan IS NOT NULL";
-    if (p.selectedQuotaTypes.martyrsAndVeteransQuota) kontenjan << "SehitGaziKontenjan IS NOT NULL";
-    if (p.selectedQuotaTypes.earthquakeVictimsQuota)  kontenjan << "DepremzedeKontenjan IS NOT NULL";
-    if (p.selectedQuotaTypes.women34PlusQuota)        kontenjan << "Kadin34Kontenjan IS NOT NULL";
-    if (p.selectedQuotaTypes.trncNationalsQuota)      kontenjan << "KKTCUyruklu = TRUE";
+    if (parameters.selectedQuotaTypes.regularQuota)           kontenjan << "GenelKontenjan IS NOT NULL";
+    if (parameters.selectedQuotaTypes.highSchoolValedictoriansQuota) kontenjan << "OkulBirincisiKontenjan IS NOT NULL";
+    if (parameters.selectedQuotaTypes.martyrsAndVeteransQuota) kontenjan << "SehitGaziKontenjan IS NOT NULL";
+    if (parameters.selectedQuotaTypes.earthquakeVictimsQuota)  kontenjan << "DepremzedeKontenjan IS NOT NULL";
+    if (parameters.selectedQuotaTypes.women34PlusQuota)        kontenjan << "Kadin34Kontenjan IS NOT NULL";
+    if (parameters.selectedQuotaTypes.trncNationalsQuota)      kontenjan << "KKTCUyruklu = TRUE";
     else                                              where << "KKTCUyruklu = FALSE";
-    if (p.selectedQuotaTypes.mtokQuota)               kontenjan << "MTOK = TRUE";
+    if (parameters.selectedQuotaTypes.mtokQuota)               kontenjan << "MTOK = TRUE";
     else                                              where << "MTOK = FALSE";
 
     if (!kontenjan.isEmpty())
@@ -310,9 +310,9 @@ QString AcademyScopeBackEnd::buildFilteredSql(const AcademyScopeParameters &p)
 
     // Tuition filters
     QStringList tuition;
-    if (p.selectedTuitionFeeTypes.free)       tuition << "UcretDurumu = 0";
-    if (p.selectedTuitionFeeTypes.discounted) tuition << "UcretDurumu = 50";
-    if (p.selectedTuitionFeeTypes.paid)       tuition << "UcretDurumu = 100";
+    if (parameters.selectedTuitionFeeTypes.free)       tuition << "UcretDurumu = 0";
+    if (parameters.selectedTuitionFeeTypes.discounted) tuition << "UcretDurumu = 50";
+    if (parameters.selectedTuitionFeeTypes.paid)       tuition << "UcretDurumu = 100";
     if (!tuition.isEmpty())                   where << "(" + tuition.join(" OR ") + ")";
 
     // Combine WHERE clauses
@@ -320,11 +320,11 @@ QString AcademyScopeBackEnd::buildFilteredSql(const AcademyScopeParameters &p)
         sql += " WHERE " + where.join(" AND ");
 
     // Order
-    if (p.order.toBeOrdered) {
-        QString col = getDbColumnNameFromProgramTableColumnIndex(p.order.column);
+    if (parameters.order.toBeOrdered) {
+        QString col = getDbColumnNameFromProgramTableColumnIndex(parameters.order.column);
         sql += QString(" ORDER BY %1 %2")
                    .arg(SQLiteUtil::trOrderExprFor(col))
-                   .arg(p.order.direction == Qt::AscendingOrder ? "ASC" : "DESC");
+                   .arg(parameters.order.direction == Qt::AscendingOrder ? "ASC" : "DESC");
     } else {
         sql += " ORDER BY ProgramKodu ASC";
     }

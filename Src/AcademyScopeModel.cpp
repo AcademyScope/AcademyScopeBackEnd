@@ -13,7 +13,7 @@ You should have received a copy of the GNU General Public License along with thi
 #include <QSqlRecord>
 #include <QSqlError>
 #include <QDebug>
-#include "EnumDefinitions.hpp"
+#include "DataTypeDefinitions.hpp"
 
 AcademyScopeModel::AcademyScopeModel(QObject *parent)
     : QAbstractTableModel(parent)
@@ -36,25 +36,26 @@ void AcademyScopeModel::setBaseQuery(const QString &queryBase)
 
     modelData.clear();
     baseQuery = "SELECT * " + queryBase;
-    lazyLoadingInfo = LazyLoadingInfo();
+    dataWindow = DataWindow();
 
     // Get total row count
     countQuery = "SELECT COUNT(*) " + queryBase;
     QSqlQuery count(db);
     if (count.exec(countQuery) && count.next())
-        lazyLoadingInfo.totalRowCount = count.value(0).toInt();
+        dataWindow.tableRowCount = count.value(0).toInt();
     else {
         qWarning() << "COUNT query failed:" << count.lastError().text();
-        lazyLoadingInfo.totalRowCount = 0;
+        dataWindow.tableRowCount = 0;
     }
 
     // Detect column count
     QString firstRowQuery = QString("%1 LIMIT 1").arg(baseQuery);
     QSqlQuery colQuery(db);
     if (colQuery.exec(firstRowQuery))
-        lazyLoadingInfo.columnCount = colQuery.record().count();
+        dataWindow.columnCount = colQuery.record().count();
     else
-        lazyLoadingInfo.columnCount = 0;
+        dataWindow.columnCount = 0;
+
 
     endResetModel();
     fetchMoreData();
@@ -76,10 +77,12 @@ int AcademyScopeModel::rowCount(const QModelIndex &) const
     return 0;
 }
 
+
 int AcademyScopeModel::columnCount(const QModelIndex &) const
 {
-    return lazyLoadingInfo.columnCount;
+    return dataWindow.columnCount;
 }
+
 
 QVariant AcademyScopeModel::data(const QModelIndex &index, int role) const
 {
@@ -151,7 +154,7 @@ void AcademyScopeModel::hideColumn(ProgramTableColumn column) const
 
 bool AcademyScopeModel::canFetchMore(const QModelIndex &) const
 {
-    return modelData.size() < lazyLoadingInfo.totalRowCount;
+    return modelData.size() < dataWindow.tableRowCount;
 }
 
 void AcademyScopeModel::fetchMore(const QModelIndex &)
@@ -168,8 +171,8 @@ void AcademyScopeModel::fetchMoreData()
 
     QString limitedQuery = QString("%1 LIMIT %2 OFFSET %3")
                                .arg(baseQuery)
-                               .arg(lazyLoadingInfo.limit)
-                               .arg(lazyLoadingInfo.offset);
+                               .arg(dataWindow.windowSize)
+                               .arg(dataWindow.beginningIndex);
 
     QSqlQuery query(db);
     if (!query.exec(limitedQuery)) {
@@ -177,12 +180,12 @@ void AcademyScopeModel::fetchMoreData()
         return;
     }
 
-    beginInsertRows(QModelIndex(), startRow, startRow + lazyLoadingInfo.limit - 1);
+    beginInsertRows(QModelIndex(), startRow, startRow + dataWindow.windowSize - 1);
 
     while (query.next()) {
         QVector<QVariant> row;
-        row.reserve(lazyLoadingInfo.columnCount);
-        for (int i = 0; i < lazyLoadingInfo.columnCount; ++i) {
+        row.reserve(dataWindow.columnCount);
+        for (int i = 0; i < dataWindow.columnCount; ++i) {
             QVariant value = query.value(i);
             if (value.isNull())
                 value = QVariant("—");
@@ -192,14 +195,14 @@ void AcademyScopeModel::fetchMoreData()
     }
 
     endInsertRows();
-    lazyLoadingInfo.offset += lazyLoadingInfo.limit;
+    dataWindow.beginningIndex += dataWindow.windowSize;
 }
 
 void AcademyScopeModel::clear()
 {
     beginResetModel();
     modelData.clear();
-    lazyLoadingInfo = LazyLoadingInfo();
+    dataWindow = DataWindow();
     baseQuery.clear();
     endResetModel();
 }

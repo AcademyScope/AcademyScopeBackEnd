@@ -14,14 +14,7 @@ You should have received a copy of the GNU General Public License along with thi
 #include <QSqlQuery>
 #include <QVector>
 #include <QVariant>
-#include "EnumDefinitions.hpp"
-
-struct LazyLoadingInfo {
-    int totalRowCount = 0;
-    int limit = 300;
-    int offset = 0;
-    int columnCount = 0;
-};
+#include "DataTypeDefinitions.hpp"
 
 class AcademyScopeModel : public QAbstractTableModel {
     Q_OBJECT
@@ -34,7 +27,6 @@ public:
     void setBaseQuery(const QString &queryBase);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
@@ -46,6 +38,7 @@ public:
 
     void clear();
 
+    int columnCount(const QModelIndex &) const override;
 private:
     void fetchMoreData();
 
@@ -53,5 +46,5 @@ private:
     QString baseQuery;
     QString countQuery;
     QVector<QVector<QVariant>> modelData;
-    LazyLoadingInfo lazyLoadingInfo;
+    DataWindow dataWindow;
 };
