@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License along with thi
 #include "EnumDefinitions.hpp"
 #include <QStandardItemModel>
 #include <optional>
+#include "AcademyScopeModel.hpp"
 
 struct University {
     int id;
@@ -131,10 +132,11 @@ protected:
 
 class AcademyScopeBackEnd {
 public:
-    AcademyScopeBackEnd(ProgramTableInterface * programTable);
+    AcademyScopeBackEnd();
     QList<University> getUniversities();
     QList<QString> getDepartments();
     void populateProgramTable(const AcademyScopeParameters &academyScopeParameters);
+    AcademyScopeModel * getDataModel();
 
 private:
     void initDB();
@@ -145,9 +147,9 @@ private:
     void hideUnusedColumnsOnTheProgramTable();
     void initializeYKSTableColumnNames();
     void setLogoDarkMode(bool isDarkMode);
+    QString buildFilteredSql(const AcademyScopeParameters &academyScopeParameters);
     QString getDbColumnNameFromProgramTableColumnIndex(ProgramTableColumn columnIndex);
-
-    ProgramTableInterface * programTable = nullptr;
+    AcademyScopeModel dataModel;
 
     QLocale turkishLocale;
     QStringList yksTableColumnNames;
