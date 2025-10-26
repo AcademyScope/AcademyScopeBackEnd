@@ -335,9 +335,9 @@ QString AcademyScopeBackEnd::buildFilteredSql(const AcademyScopeParameters &para
 QString AcademyScopeBackEnd::getDbColumnNameFromProgramTableColumnIndex(ProgramTableColumn column) {
     switch (column) {
     case ProgramTableColumn::ProgramKodu:              return "ProgramKodu";
-    case ProgramTableColumn::Universite:               return "UniversiteAdi";
-    case ProgramTableColumn::Kampus:                   return "FakulteYuksekokulAdi";
-    case ProgramTableColumn::Program:                  return "ProgramAdi";
+    case ProgramTableColumn::UniversiteAdi:            return "UniversiteAdi";
+    case ProgramTableColumn::FakulteYuksekOkulAdi:     return "FakulteYuksekokulAdi";
+    case ProgramTableColumn::ProgramAdi:               return "ProgramAdi";
     case ProgramTableColumn::PuanTuru:                 return "PuanTuru";
     case ProgramTableColumn::GenelKontenjan:           return "GenelKontenjan";
     case ProgramTableColumn::GenelYerlesen:            return "GenelYerlesen";

@@ -19,6 +19,7 @@ GNU General Public License for more details.
 #include <QSqlError>
 #include <QDebug>
 #include "DataTypeDefinitions.hpp"
+#include "ProgramTableColumnDefinitions.hpp"
 
 AcademyScopeModel::AcademyScopeModel(QObject *parent)
     : QAbstractTableModel(parent)
@@ -111,9 +112,9 @@ QVariant AcademyScopeModel::headerData(int section,
     if (orientation == Qt::Horizontal) {
         switch (static_cast<ProgramTableColumn>(section)) {
         case ProgramTableColumn::ProgramKodu:                 return "Program Kodu";
-        case ProgramTableColumn::Universite:                  return "Üniversite";
-        case ProgramTableColumn::Kampus:                      return "Kampüs";
-        case ProgramTableColumn::Program:                     return "Program";
+        case ProgramTableColumn::UniversiteAdi:               return "Üniversite";
+        case ProgramTableColumn::FakulteYuksekOkulAdi:        return "Kampüs";
+        case ProgramTableColumn::ProgramAdi:                  return "Program";
         case ProgramTableColumn::PuanTuru:                    return "Puan Türü";
         case ProgramTableColumn::GenelKontenjan:              return "Kontenjan";
         case ProgramTableColumn::GenelYerlesen:               return "Yerleşen";

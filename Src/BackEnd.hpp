@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License along with thi
 #include <QLocale>
 #include <QSqlDatabase>
 #include "DataTypeDefinitions.hpp"
+#include "ProgramTableColumnDefinitions.hpp"
 #include <QStandardItemModel>
 #include "AcademyScopeModel.hpp"
 

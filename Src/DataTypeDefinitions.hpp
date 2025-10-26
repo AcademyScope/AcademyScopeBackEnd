@@ -9,36 +9,9 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
+#include <QObject>
 #include <QString>
-
-enum class ProgramTableColumn : int {
-    ProgramKodu = 0,
-    Universite,
-    Kampus,
-    Program,
-    PuanTuru,
-    GenelKontenjan,
-    GenelYerlesen,
-    GenelBasariSirasi,
-    GenelEnKucukPuan,
-    OkulBirincisiKontenjan,
-    OkulBirincisiYerlesen,
-    OkulBirincisiBasariSirasi,
-    OkulBirincisiEnKucukPuan,
-    SehitGaziYakiniKontenjan,
-    SehitGaziYakiniYerlesen,
-    SehitGaziYakiniBasariSirasi,
-    SehitGaziYakiniEnKucukPuan,
-    DepremzedeKontenjan,
-    DepremzedeYerlesen,
-    DepremzedeBasariSirasi,
-    DepremzedeEnKucukPuan,
-    Kadin34PlusKontenjan,
-    Kadin34PlusYerlesen,
-    Kadin34PlusBasariSirasi,
-    Kadin34PlusEnKucukPuan
-};
-
+#include <QMap>
 
 struct University {
     int id;
@@ -103,6 +76,8 @@ enum class PlacementType {
     Regular,       // Normal yerleştirme
     Additional     // Ek yerleştirme
 };
+
+enum class ProgramTableColumn : int;
 
 struct OrderParameters {
     ProgramTableColumn column;
