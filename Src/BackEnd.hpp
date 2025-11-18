@@ -43,6 +43,7 @@ public:
     QList<QString> getDepartments() const;
     void populateProgramTable(const AcademyScopeParameters &academyScopeParameters);
     AcademyScopeModel * getDataModel();
+    QStringList getProgramTableColumnsToBeShown(const AcademyScopeParameters &parameters);
 
 private:
     void initDB();

@@ -111,6 +111,107 @@ AcademyScopeModel *AcademyScopeBackEnd::getDataModel()
     return &dataModel;
 }
 
+QStringList AcademyScopeBackEnd::getProgramTableColumnsToBeShown(const AcademyScopeParameters &parameters)
+{
+    QMap<ProgramTableColumn, ProgramTableColumnInfo> columnMap = ProgramTableColumns::getColumnMap();
+
+    /*
+
+    //Unused
+    columnMap.remove(ProgramTableColumn::GenelBasariSirasi);
+    columnMap.remove(ProgramTableColumn::OkulBirincisiBasariSirasi);
+    columnMap.remove(ProgramTableColumn::SehitGaziYakiniBasariSirasi);
+    columnMap.remove(ProgramTableColumn::DepremzedeBasariSirasi);
+    columnMap.remove(ProgramTableColumn::Kadin34PlusBasariSirasi);
+    columnMap.remove();
+    columnMap.remove();
+
+    if(ui->checkBoxGenel->isChecked() || ui->checkBoxKKTCUyruklu->isChecked() || ui->checkBoxMTOK->isChecked()) {
+        ui->programTable->showColumn((int) ProgramTableColumn::GenelKontenjan);
+        ui->programTable->showColumn((int) ProgramTableColumn::GenelYerlesen);
+        ui->programTable->showColumn((int) ProgramTableColumn::GenelEnKucukPuan);
+    }
+    else {
+        columnMap.remove(ProgramTableColumn::GenelKontenjan);
+        columnMap.remove(ProgramTableColumn::GenelYerlesen);
+        columnMap.remove(ProgramTableColumn::GenelEnKucukPuan);
+    }
+
+    if(ui->checkBoxOkulBirincisi->isChecked()) {
+        ui->programTable->showColumn((int) ProgramTableColumn::OkulBirincisiKontenjan);
+        ui->programTable->showColumn((int) ProgramTableColumn::OkulBirincisiYerlesen);
+        ui->programTable->showColumn((int) ProgramTableColumn::OkulBirincisiEnKucukPuan);
+    }
+    else {
+        ui->programTable->hideColumn((int) );
+        columnMap.remove(ProgramTableColumn::OkulBirincisiKontenjan);
+
+        ui->programTable->hideColumn();
+        columnMap.remove(ProgramTableColumn::OkulBirincisiYerlesen);
+
+        ui->programTable->hideColumn((int) ProgramTableColumn::OkulBirincisiEnKucukPuan);
+        columnMap.remove();
+
+    }
+
+    if(ui->checkBoxSehitGaziYakini->isChecked()) {
+        ui->programTable->showColumn((int) ProgramTableColumn::SehitGaziYakiniKontenjan);
+        ui->programTable->showColumn((int) ProgramTableColumn::SehitGaziYakiniYerlesen);
+        ui->programTable->showColumn((int) ProgramTableColumn::SehitGaziYakiniEnKucukPuan);
+    }
+    else {
+        ui->programTable->hideColumn((int) ProgramTableColumn::SehitGaziYakiniKontenjan);
+        ui->programTable->hideColumn((int) ProgramTableColumn::SehitGaziYakiniYerlesen);
+        ui->programTable->hideColumn((int) ProgramTableColumn::SehitGaziYakiniEnKucukPuan);
+    }
+
+
+    if(ui->checkBoxDepremzede->isChecked()) {
+        ui->programTable->showColumn((int) ProgramTableColumn::DepremzedeKontenjan);
+        ui->programTable->showColumn((int) ProgramTableColumn::DepremzedeYerlesen);
+        ui->programTable->showColumn((int) ProgramTableColumn::DepremzedeEnKucukPuan);
+    }
+    else {
+        ui->programTable->hideColumn((int) ProgramTableColumn::DepremzedeKontenjan);
+        ui->programTable->hideColumn((int) ProgramTableColumn::DepremzedeYerlesen);
+        ui->programTable->hideColumn((int) ProgramTableColumn::DepremzedeEnKucukPuan);
+    }
+
+
+    if(ui->checkBoxKadin34->isChecked()) {
+        ui->programTable->showColumn((int) ProgramTableColumn::Kadin34PlusKontenjan);
+        ui->programTable->showColumn((int) ProgramTableColumn::Kadin34PlusYerlesen);
+        ui->programTable->showColumn((int) ProgramTableColumn::Kadin34PlusEnKucukPuan);
+    }
+    else {
+        ui->programTable->hideColumn((int) ProgramTableColumn::Kadin34PlusKontenjan);
+        ui->programTable->hideColumn((int) ProgramTableColumn::Kadin34PlusYerlesen);
+        ui->programTable->hideColumn((int) ProgramTableColumn::Kadin34PlusEnKucukPuan);
+    }
+
+    //Ek kontenjanda yok
+    if(parameters.placementType == PlacementType::Regular) {
+        if(ui->checkBoxGenel->isChecked())
+            ui->programTable->showColumn((int) ProgramTableColumn::GenelYerlesen);
+        if(ui->checkBoxOkulBirincisi->isChecked())
+            ui->programTable->showColumn((int) ProgramTableColumn::OkulBirincisiYerlesen);
+        if(ui->checkBoxSehitGaziYakini->isChecked())
+            ui->programTable->showColumn((int) ProgramTableColumn::SehitGaziYakiniYerlesen);
+        if(ui->checkBoxDepremzede->isChecked())
+            ui->programTable->showColumn((int) ProgramTableColumn::DepremzedeYerlesen);
+        if(ui->checkBoxKadin34->isChecked())
+            ui->programTable->showColumn((int) ProgramTableColumn::Kadin34PlusYerlesen);
+    }
+    else {
+        ui->programTable->hideColumn((int) ProgramTableColumn::GenelYerlesen);
+        ui->programTable->hideColumn((int) ProgramTableColumn::OkulBirincisiYerlesen);
+        ui->programTable->hideColumn((int) ProgramTableColumn::SehitGaziYakiniYerlesen);
+        ui->programTable->hideColumn((int) ProgramTableColumn::DepremzedeYerlesen);
+        ui->programTable->hideColumn((int) ProgramTableColumn::Kadin34PlusYerlesen);
+    }
+    */
+}
+
 void AcademyScopeBackEnd::hideUnnecessaryColumnsOnTheProgramTable(const AcademyScopeParameters &academyScopeParameters) const {
     if(academyScopeParameters.selectedQuotaTypes.regularQuota || academyScopeParameters.selectedQuotaTypes.trncNationalsQuota || academyScopeParameters.selectedQuotaTypes.mtokQuota) {
         dataModel.showColumn(ProgramTableColumn::GenelKontenjan);

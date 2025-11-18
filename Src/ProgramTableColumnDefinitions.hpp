@@ -67,9 +67,12 @@ public:
     };
     Q_ENUM(Column)
 
-    static const QMap<ProgramTableColumn, ProgramTableColumnInfo> table;
-
-    static ProgramTableColumnInfo operator[] (ProgramTableColumn programTableColumn);
-
+    static const QMap<ProgramTableColumn, ProgramTableColumnInfo> columnMap;
+    static const QMap<ProgramTableColumn, ProgramTableColumnInfo> baseColumnMap;
+    static const QMap<ProgramTableColumn, ProgramTableColumnInfo> optionalColumnMap;
+    static const ProgramTableColumnInfo & operator[] (ProgramTableColumn programTableColumn);
     static QList<ProgramTableColumnInfo> getColumns();
+    static QMap<ProgramTableColumn, ProgramTableColumnInfo> getColumnMap();
+
+private:
 };

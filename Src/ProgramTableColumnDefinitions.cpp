@@ -14,39 +14,79 @@ You should have received a copy of the GNU General Public License along with thi
 ProgramTableColumnInfo::ProgramTableColumnInfo(const QString& db, const QString& display)
     : dbName(db), displayName(display) {}
 
-const QMap<ProgramTableColumn, ProgramTableColumnInfo> ProgramTableColumns::table = {
-    { ProgramTableColumn::ProgramKodu, {"ProgramKodu", "Program Kodu"}},
-    { ProgramTableColumn::UniversiteAdi, {"UniversiteAdi", "Üniversite"}},
-    { ProgramTableColumn::FakulteYuksekOkulAdi, {"Kampus", "Fakülte/YO"}},
-    { ProgramTableColumn::ProgramAdi, {"ProgramAdi", "Program"}},
-    { ProgramTableColumn::PuanTuru, {"PuanTuru", "Puan Türü"}},
-    { ProgramTableColumn::GenelKontenjan, {"GenelKontenjan", "Genel Kontenjan"}},
-    { ProgramTableColumn::GenelYerlesen, {"GenelYerlesen", "Genel Yerleşen"}},
-    { ProgramTableColumn::GenelBasariSirasi, {"GenelBasariSirasi", "Başarı Sırası"}},
-    { ProgramTableColumn::GenelEnKucukPuan, {"GenelEnKucukPuan", "En Küçük Puan"}},
-    { ProgramTableColumn::OkulBirincisiKontenjan, {"OkulBirincisiKontenjan", "Okul Birincisi Kontenjan"}},
-    { ProgramTableColumn::OkulBirincisiYerlesen, {"OkulBirincisiYerlesen", "Okul Birincisi Yerleşen"}},
-    { ProgramTableColumn::OkulBirincisiBasariSirasi, {"OkulBirincisiBasariSirasi", "Okul Birincisi Kontenjan"}},
-    { ProgramTableColumn::OkulBirincisiEnKucukPuan, {"OkulBirincisiEnKucukPuan", "Okul Birincisi En Küçük Puan"}},
-    { ProgramTableColumn::SehitGaziYakiniKontenjan, {"SehitGaziYakiniKontenjan", "Şehit/Gazi Yakını "}},
-    { ProgramTableColumn::SehitGaziYakiniYerlesen, {"SehitGaziYakiniYerlesen", "Şehit/Gazi Yakını Yerleşen"}},
-    { ProgramTableColumn::SehitGaziYakiniBasariSirasi, {"SehitGaziYakiniBasariSirasi", "Şehit/Gazi Yakını Başarı Sırası"}},
-    { ProgramTableColumn::SehitGaziYakiniEnKucukPuan, {"SehitGaziYakiniEnKucukPuan", "Şehit/Gazi Yakını En Küçük Puan"}},
-    { ProgramTableColumn::DepremzedeKontenjan, {"DepremzedeKontenjan", "Depremzede Kontenjan"}},
-    { ProgramTableColumn::DepremzedeYerlesen, {"DepremzedeYerlesen", "Depremzede Yerleşen"}},
-    { ProgramTableColumn::DepremzedeBasariSirasi, {"DepremzedeBasariSirasi", "Depremzede "}},
-    { ProgramTableColumn::DepremzedeEnKucukPuan, {"DepremzedeEnKucukPuan", "Depremzede En Küçük Puan"}},
-    { ProgramTableColumn::Kadin34PlusKontenjan, {"Kadin34Kontenjan", "34+ Kadın Kontenjan"}},
-    { ProgramTableColumn::Kadin34PlusYerlesen, {"Kadin34Yerlesen", "34+ Kadın Yerleşen"}},
-    { ProgramTableColumn::Kadin34PlusBasariSirasi, {"Kadin34BasariSirasi", "34+ Kadın Başarı Sırası"}},
-    { ProgramTableColumn::Kadin34PlusEnKucukPuan, {"Kadin34EnKucukPuan", "34+ Kadın En Küçük Puan"}}
+const QMap<ProgramTableColumn, ProgramTableColumnInfo> ProgramTableColumns::columnMap = {
+    //Base Columns
+    { ProgramTableColumn::ProgramKodu, ProgramTableColumnInfo("ProgramKodu", "Program Kodu")},
+    { ProgramTableColumn::UniversiteAdi, ProgramTableColumnInfo("UniversiteAdi", "Üniversite")},
+    { ProgramTableColumn::FakulteYuksekOkulAdi, ProgramTableColumnInfo("Kampus", "Fakülte/YO")},
+    { ProgramTableColumn::ProgramAdi, ProgramTableColumnInfo("ProgramAdi", "Program")},
+    { ProgramTableColumn::PuanTuru, ProgramTableColumnInfo("PuanTuru", "Puan Türü")},
+    //Optional Columns
+    { ProgramTableColumn::GenelKontenjan, ProgramTableColumnInfo("GenelKontenjan", "Genel Kontenjan")},
+    { ProgramTableColumn::GenelYerlesen, ProgramTableColumnInfo("GenelYerlesen", "Genel Yerleşen")},
+    { ProgramTableColumn::GenelBasariSirasi, ProgramTableColumnInfo("GenelBasariSirasi", "Başarı Sırası")},
+    { ProgramTableColumn::GenelEnKucukPuan, ProgramTableColumnInfo("GenelEnKucukPuan", "En Küçük Puan")},
+    { ProgramTableColumn::OkulBirincisiKontenjan, ProgramTableColumnInfo("OkulBirincisiKontenjan", "Okul Birincisi Kontenjan")},
+    { ProgramTableColumn::OkulBirincisiYerlesen, ProgramTableColumnInfo("OkulBirincisiYerlesen", "Okul Birincisi Yerleşen")},
+    { ProgramTableColumn::OkulBirincisiBasariSirasi, ProgramTableColumnInfo("OkulBirincisiBasariSirasi", "Okul Birincisi Kontenjan")},
+    { ProgramTableColumn::OkulBirincisiEnKucukPuan, ProgramTableColumnInfo("OkulBirincisiEnKucukPuan", "Okul Birincisi En Küçük Puan")},
+    { ProgramTableColumn::SehitGaziYakiniKontenjan, ProgramTableColumnInfo("SehitGaziYakiniKontenjan", "Şehit/Gazi Yakını ")},
+    { ProgramTableColumn::SehitGaziYakiniYerlesen, ProgramTableColumnInfo("SehitGaziYakiniYerlesen", "Şehit/Gazi Yakını Yerleşen")},
+    { ProgramTableColumn::SehitGaziYakiniBasariSirasi, ProgramTableColumnInfo("SehitGaziYakiniBasariSirasi", "Şehit/Gazi Yakını Başarı Sırası")},
+    { ProgramTableColumn::SehitGaziYakiniEnKucukPuan, ProgramTableColumnInfo("SehitGaziYakiniEnKucukPuan", "Şehit/Gazi Yakını En Küçük Puan")},
+    { ProgramTableColumn::DepremzedeKontenjan, ProgramTableColumnInfo("DepremzedeKontenjan", "Depremzede Kontenjan")},
+    { ProgramTableColumn::DepremzedeYerlesen, ProgramTableColumnInfo("DepremzedeYerlesen", "Depremzede Yerleşen")},
+    { ProgramTableColumn::DepremzedeBasariSirasi, ProgramTableColumnInfo("DepremzedeBasariSirasi", "Depremzede ")},
+    { ProgramTableColumn::DepremzedeEnKucukPuan, ProgramTableColumnInfo("DepremzedeEnKucukPuan", "Depremzede En Küçük Puan")},
+    { ProgramTableColumn::Kadin34PlusKontenjan, ProgramTableColumnInfo("Kadin34Kontenjan", "34+ Kadın Kontenjan")},
+    { ProgramTableColumn::Kadin34PlusYerlesen, ProgramTableColumnInfo("Kadin34Yerlesen", "34+ Kadın Yerleşen")},
+    { ProgramTableColumn::Kadin34PlusBasariSirasi, ProgramTableColumnInfo("Kadin34BasariSirasi", "34+ Kadın Başarı Sırası")},
+    { ProgramTableColumn::Kadin34PlusEnKucukPuan, ProgramTableColumnInfo("Kadin34EnKucukPuan", "34+ Kadın En Küçük Puan")}
 };
 
-ProgramTableColumnInfo ProgramTableColumns::operator[](ProgramTableColumn programTableColumn) {
-    return table[programTableColumn];
+const QMap<ProgramTableColumn, ProgramTableColumnInfo> ProgramTableColumns::baseColumnMap = {
+    //Base Columns
+    { ProgramTableColumn::ProgramKodu, ProgramTableColumnInfo("ProgramKodu", "Program Kodu")},
+    { ProgramTableColumn::UniversiteAdi, ProgramTableColumnInfo("UniversiteAdi", "Üniversite")},
+    { ProgramTableColumn::FakulteYuksekOkulAdi, ProgramTableColumnInfo("Kampus", "Fakülte/YO")},
+    { ProgramTableColumn::ProgramAdi, ProgramTableColumnInfo("ProgramAdi", "Program")},
+    { ProgramTableColumn::PuanTuru, ProgramTableColumnInfo("PuanTuru", "Puan Türü")},
+};
+
+const QMap<ProgramTableColumn, ProgramTableColumnInfo> ProgramTableColumns::optionalColumnMap = {
+    //Optional Columns
+    { ProgramTableColumn::GenelKontenjan, ProgramTableColumnInfo("GenelKontenjan", "Genel Kontenjan")},
+    { ProgramTableColumn::GenelYerlesen, ProgramTableColumnInfo("GenelYerlesen", "Genel Yerleşen")},
+    { ProgramTableColumn::GenelBasariSirasi, ProgramTableColumnInfo("GenelBasariSirasi", "Başarı Sırası")},
+    { ProgramTableColumn::GenelEnKucukPuan, ProgramTableColumnInfo("GenelEnKucukPuan", "En Küçük Puan")},
+    { ProgramTableColumn::OkulBirincisiKontenjan, ProgramTableColumnInfo("OkulBirincisiKontenjan", "Okul Birincisi Kontenjan")},
+    { ProgramTableColumn::OkulBirincisiYerlesen, ProgramTableColumnInfo("OkulBirincisiYerlesen", "Okul Birincisi Yerleşen")},
+    { ProgramTableColumn::OkulBirincisiBasariSirasi, ProgramTableColumnInfo("OkulBirincisiBasariSirasi", "Okul Birincisi Kontenjan")},
+    { ProgramTableColumn::OkulBirincisiEnKucukPuan, ProgramTableColumnInfo("OkulBirincisiEnKucukPuan", "Okul Birincisi En Küçük Puan")},
+    { ProgramTableColumn::SehitGaziYakiniKontenjan, ProgramTableColumnInfo("SehitGaziYakiniKontenjan", "Şehit/Gazi Yakını ")},
+    { ProgramTableColumn::SehitGaziYakiniYerlesen, ProgramTableColumnInfo("SehitGaziYakiniYerlesen", "Şehit/Gazi Yakını Yerleşen")},
+    { ProgramTableColumn::SehitGaziYakiniBasariSirasi, ProgramTableColumnInfo("SehitGaziYakiniBasariSirasi", "Şehit/Gazi Yakını Başarı Sırası")},
+    { ProgramTableColumn::SehitGaziYakiniEnKucukPuan, ProgramTableColumnInfo("SehitGaziYakiniEnKucukPuan", "Şehit/Gazi Yakını En Küçük Puan")},
+    { ProgramTableColumn::DepremzedeKontenjan, ProgramTableColumnInfo("DepremzedeKontenjan", "Depremzede Kontenjan")},
+    { ProgramTableColumn::DepremzedeYerlesen, ProgramTableColumnInfo("DepremzedeYerlesen", "Depremzede Yerleşen")},
+    { ProgramTableColumn::DepremzedeBasariSirasi, ProgramTableColumnInfo("DepremzedeBasariSirasi", "Depremzede ")},
+    { ProgramTableColumn::DepremzedeEnKucukPuan, ProgramTableColumnInfo("DepremzedeEnKucukPuan", "Depremzede En Küçük Puan")},
+    { ProgramTableColumn::Kadin34PlusKontenjan, ProgramTableColumnInfo("Kadin34Kontenjan", "34+ Kadın Kontenjan")},
+    { ProgramTableColumn::Kadin34PlusYerlesen, ProgramTableColumnInfo("Kadin34Yerlesen", "34+ Kadın Yerleşen")},
+    { ProgramTableColumn::Kadin34PlusBasariSirasi, ProgramTableColumnInfo("Kadin34BasariSirasi", "34+ Kadın Başarı Sırası")},
+    { ProgramTableColumn::Kadin34PlusEnKucukPuan, ProgramTableColumnInfo("Kadin34EnKucukPuan", "34+ Kadın En Küçük Puan")}
+};
+
+const ProgramTableColumnInfo & ProgramTableColumns::operator[](ProgramTableColumn programTableColumn) {
+    return columnMap[programTableColumn];
 }
 
 QList<ProgramTableColumnInfo> ProgramTableColumns::getColumns()
 {
-    return table.values();
+    return columnMap.values();
+}
+
+QMap<ProgramTableColumn, ProgramTableColumnInfo> ProgramTableColumns::getColumnMap()
+{
+    return columnMap;
 }
